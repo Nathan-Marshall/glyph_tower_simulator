@@ -87,6 +87,10 @@ class GlyphTowerCanvas(tkinter.Canvas):
         for renderer in self.glyph_renderers:
             renderer.visible = visible
 
+    def set_glyphs_color(self, color):
+        for renderer in self.glyph_renderers:
+            renderer.color = color
+
     def set_labels_visible(self, visible):
         for renderer in self.glyph_renderers:
             renderer.label_visible = visible

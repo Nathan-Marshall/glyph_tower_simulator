@@ -12,6 +12,22 @@ up_consonant_fixed_shift = 2
 up_vowel_fixed_shift = 1
 down_vowel_fixed_shift = 2
 
+# (consonant_index, vowel_index, is_inverted)
+solution_glyph_indices = (
+    (7, 8, False),
+    (22, 8, False),
+    (12, 12, False),
+    (15, 7, False),
+    (17, 14, True),
+    (13, 6, True),
+    (15, 6, False),
+    (12, 11, False),
+    (18, 10, False),
+    (0, 0, True),
+    (8, 17, False),
+    (0, 0, False),
+)
+
 
 def process_direction(glyph_renderers, direction, parse_key=range(4)):
     """
@@ -63,8 +79,15 @@ def process_direction(glyph_renderers, direction, parse_key=range(4)):
 
     shared_variable_shift += 1
 
-    for renderer in glyph_renderers:
+    for renderer, solution_indices in zip(glyph_renderers, solution_glyph_indices):
         renderer.visible = True
+
+        # Render the solution as magenta, so you know you've entered it correctly
+        c_index = renderer.consonant_index % len(renderer.consonant_definitions)
+        v_index = renderer.vowel_index % len(renderer.vowel_definitions)
+        indices = (c_index, v_index, renderer.is_inverted())
+        renderer.color = "#b0b" if indices == solution_indices else "black"
+
         renderer.update()
 
     print(direction, end=" ")

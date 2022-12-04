@@ -42,7 +42,7 @@ class GlyphRenderer:
     }
 
     def __init__(self, canvas, consonants, vowels, consonant_index=0, vowel_index=0, inversion_index=0,
-                 x=0, y=0, scale=5, visible=True, label_visible=True):
+                 x=0, y=0, scale=5, visible=True, color="black", label_visible=True):
         self.canvas = canvas
 
         self.consonant_labels = tuple(c[0] for c in consonants)
@@ -72,6 +72,7 @@ class GlyphRenderer:
         self.label = canvas.create_text(x, y, **self.label_options)
 
         self.visible = visible
+        self.color = color
         self.label_visible = label_visible
 
         self.update()
@@ -103,20 +104,20 @@ class GlyphRenderer:
         # update consonant line coordinates and visibility
         for consonant_line, local_coords, has_line in zip(self.consonant_lines, self.consonant_line_coords, self.get_consonant()):
             self.canvas.coords(consonant_line, self.local_to_global(*local_coords))
-            self.canvas.itemconfig(consonant_line, state="normal" if self.visible and has_line else "hidden")
+            self.canvas.itemconfig(consonant_line, state="normal" if self.visible and has_line else "hidden", fill=self.color)
 
         # update vowel line coordinates and visibility
         for vowel_line, local_coords, has_line in zip(self.vowel_lines, self.vowel_line_coords, self.get_vowel()):
             self.canvas.coords(vowel_line, self.local_to_global(*local_coords))
-            self.canvas.itemconfig(vowel_line, state="normal" if self.visible and has_line else "hidden")
+            self.canvas.itemconfig(vowel_line, state="normal" if self.visible and has_line else "hidden", fill=self.color)
 
         # update inversion accent coordinates and visibility
         self.canvas.coords(self.inversion_accent, self.local_to_global(*self.inversion_accent_coords))
-        self.canvas.itemconfig(self.inversion_accent, state="normal" if self.visible and self.is_inverted() else "hidden")
+        self.canvas.itemconfig(self.inversion_accent, state="normal" if self.visible and self.is_inverted() else "hidden", outline=self.color)
 
         # update label coordinates and text
         self.canvas.coords(self.label, self.local_to_global(*self.label_coords)[0:2])
         consonant_text = self.consonant_labels[self.consonant_index]
         vowel_text = self.vowel_labels[self.vowel_index]
         label_text = consonant_text + vowel_text if not self.is_inverted() else vowel_text + consonant_text
-        self.canvas.itemconfig(self.label, text=label_text, state="normal" if self.visible and self.label_visible else "hidden")
+        self.canvas.itemconfig(self.label, text=label_text, state="normal" if self.visible and self.label_visible else "hidden", fill=self.color)
