@@ -8,6 +8,8 @@ from parser import args, input_file_directions, input_file_parse_key
 
 # Init tk
 root = tkinter.Tk()
+root.title("Glyph Tower Simulator")
+root.iconbitmap("glyph_icon.ico")
 
 # Create canvas
 canvas = GlyphTowerCanvas(root, bg="white", height=600, width=600, consonants=consonants_ancient, vowels=vowels,
